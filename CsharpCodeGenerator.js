@@ -678,6 +678,7 @@ define(function (require, exports, module) {
 
     CsharpCodeGenerator.prototype.getType = function (elem) {
         var _type = "void";
+        var _nullable = false;
         // type name
         if (elem instanceof type.UMLAssociationEnd) {
             if (elem.reference instanceof type.UMLModelElement && elem.reference.name.length > 0) {
@@ -686,8 +687,10 @@ define(function (require, exports, module) {
         } else {
             if (elem.type instanceof type.UMLModelElement && elem.type.name.length > 0) {
                 _type = elem.type.name;
+                _nullable = elem.type instanceof type.UMLEnumeration;
             } else if (_.isString(elem.type) && elem.type.length > 0) {
                 _type = elem.type;
+                _nullable = elem.type.name !== "string";
             }
         }
 
@@ -702,6 +705,8 @@ define(function (require, exports, module) {
                 }
             } else if (elem.multiplicity !== "1" && elem.multiplicity.match(/^\d+$/)) { // number
                 _type += "[]";
+            } else if (elem.multiplicity === "0..1" && _nullable && !_type.match(/\?$/)) {
+                _type += "?";
             }
         }
         return _type;
