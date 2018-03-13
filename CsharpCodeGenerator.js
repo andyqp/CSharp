@@ -135,7 +135,7 @@ define(function (require, exports, module) {
                 FileUtils.writeText(file, codeWriter.getData(), true).then(result.resolve, result.reject);
             } else {
                 // Class
-                fullPath = path + "/" + elem.name + ".cs";
+                fullPath = path + "/" + elem.name + ".Designer.cs";
                 console.log('Class generate' + fullPath);
 
                 codeWriter = new CodeGenUtils.CodeWriter(this.getIndentString(options));
@@ -487,7 +487,7 @@ define(function (require, exports, module) {
         }
 
         // Class
-        terms.push("class");
+        terms.push("patial class");
         terms.push(elem.name);
 
         // Extends
