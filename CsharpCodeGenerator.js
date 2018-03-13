@@ -515,8 +515,8 @@ define(function (require, exports, module) {
         codeWriter.indent();
 
         // Constructor
-        this.writeConstructor(codeWriter, elem, options);
-        codeWriter.writeLine();
+        // this.writeConstructor(codeWriter, elem, options);
+        // codeWriter.writeLine();
 
         // Member Variables
         // (from attributes)
