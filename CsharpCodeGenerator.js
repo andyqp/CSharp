@@ -139,7 +139,6 @@ define(function (require, exports, module) {
                 console.log('Class generate' + fullPath);
 
                 codeWriter = new CodeGenUtils.CodeWriter(this.getIndentString(options));
-                codeWriter.writeLine();
                 codeWriter.writeLine("using System;");
                 codeWriter.writeLine("using System.Collections.Generic;");
                 codeWriter.writeLine("using System.Linq;");
@@ -373,7 +372,7 @@ define(function (require, exports, module) {
         terms.push(elem.name + "Attribute");
 
         // AnnotationType => Attribute in C#
-        terms.push(":System.Attribute");
+        terms.push(" : System.Attribute");
 
 
 //        // Extends
@@ -493,7 +492,7 @@ define(function (require, exports, module) {
         // Extends
         var _extends = this.getSuperClasses(elem);
         if (_extends.length > 0) {
-            terms.push(": " + _extends[0].name);
+            terms.push(" : " + _extends[0].name);
         }
 
         // Implements
