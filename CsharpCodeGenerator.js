@@ -92,7 +92,7 @@ define(function (require, exports, module) {
             fullPath = path + "/" + elem.name;
             directory = FileSystem.getDirectoryForPath(fullPath);
             directory.create(function (err, stat) {
-                if (!err) {
+                // if (!err) {
                     Async.doSequentially(
                         elem.ownedElements,
                         function (child) {
@@ -101,9 +101,9 @@ define(function (require, exports, module) {
                         },
                         false
                     ).then(result.resolve, result.reject);
-                } else {
-                    result.reject(err);
-                }
+                // } else {
+                //     result.reject(err);
+                // }
             });
         } else if (elem instanceof type.UMLClass) {
 
