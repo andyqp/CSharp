@@ -735,11 +735,25 @@ define(function (require, exports, module) {
             terms.push(this.getType(elem));
             // name
             terms.push(elem.name);
+
+            if (elem.stereotype !== "field") {
+                if (elem.isDerived) {
+                    terms.push(" => " + elem.defaultValue + ";");
+                }
+                else {
+                    terms.push("{ get;");
+                    if (!elem.isReadOnly) {
+                        terms.push("set;");
+                    }
+                    terms.push("}")
+                }
+            }
             // initial value
-            if (elem.defaultValue && elem.defaultValue.length > 0) {
+            if (elem.defaultValue && elem.defaultValue.length > 0 && !elem.isDerived) {
                 terms.push("= " + elem.defaultValue);
             }
-            codeWriter.writeLine(terms.join(" ") + ";");
+
+            codeWriter.writeLine(terms.join(" ") + (elem.stereotype === "field" ? ";" : ""));
         }
     };
 
