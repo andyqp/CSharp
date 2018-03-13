@@ -194,10 +194,15 @@ define(function (require, exports, module) {
     CsharpCodeGenerator.prototype.writeNamespace = function (writeFunction, codeWriter, elem, options) {
         var path = null;
         if (elem._parent) {
-            path = _.map(elem._parent.getPath(this.baseModel), function (e) { return e.name; }).join(".");
+            if (elem._parent === this.baseModel && elem._parent instanceof type.UMLPackage) {
+                path = elem._parent.name;
+            }
+            else {
+                path = _.map(elem._parent.getPath(this.baseModel), function (e) { return e.name; }).join(".");
+            }
         }
         if (path) {
-            codeWriter.writeLine("namespace " + path + "{");
+            codeWriter.writeLine("namespace " + path + " {");
             codeWriter.indent();
         }
         if (writeFunction === "writeAnnotationType") {
