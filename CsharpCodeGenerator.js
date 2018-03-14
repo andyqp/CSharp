@@ -687,6 +687,9 @@ define(function (require, exports, module) {
         if (elem instanceof type.UMLAssociationEnd) {
             if (elem.reference instanceof type.UMLModelElement && elem.reference.name.length > 0) {
                 _type = elem.reference.name;
+                if (elem._parent !== elem.reference._parent) {
+                    
+                }
             }
         } else {
             if (elem.type instanceof type.UMLModelElement && elem.type.name.length > 0) {

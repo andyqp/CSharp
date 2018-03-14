@@ -30,8 +30,8 @@ define(function (require, exports, module) {
             type: "Section"
         },
         "csharp.gen.csharpDoc": {
-            text: "C# Doc",
-            description: "Generate C# Doc comments.",
+            text: "C# XML comments",
+            description: "Generate C# XML comments.",
             type: "Check",
             default: true
         },
@@ -46,40 +46,6 @@ define(function (require, exports, module) {
             description: "Number of spaces for indentation.",
             type: "Number",
             default: 4
-        },
-        "csharp.rev": {
-            text: "C# Reverse Engineering",
-            type: "Section"
-        },
-        "csharp.rev.association": {
-            text: "Use Association",
-            description: "Reverse C# Fields as UML Associations.",
-            type: "Check",
-            default: true
-        },
-        "csharp.rev.publicOnly": {
-            text: "Public Only",
-            description: "Reverse public members only.",
-            type: "Check",
-            default: false
-        },
-        "csharp.rev.typeHierarchy": {
-            text: "Type Hierarchy Diagram",
-            description: "Create a type hierarchy diagram for all classes and interfaces",
-            type: "Check",
-            default: true
-        },
-        "csharp.rev.packageOverview": {
-            text: "Package Overview Diagram",
-            description: "Create overview diagram for each package",
-            type: "Check",
-            default: true
-        },
-        "csharp.rev.packageStructure": {
-            text: "Package Structure Diagram",
-            description: "Create a package structure diagram for all packages",
-            type: "Check",
-            default: true
         }
     };
 
@@ -95,22 +61,10 @@ define(function (require, exports, module) {
         };
     }
 
-    function getRevOptions() {
-        return {
-            association      : PreferenceManager.get("csharp.rev.association"),
-            publicOnly       : PreferenceManager.get("csharp.rev.publicOnly"),
-            typeHierarchy    : PreferenceManager.get("csharp.rev.typeHierarchy"),
-            packageOverview  : PreferenceManager.get("csharp.rev.packageOverview"),
-            packageStructure : PreferenceManager.get("csharp.rev.packageStructure")
-        };
-    }
-
     AppInit.htmlReady(function () {
         PreferenceManager.register(preferenceId, "C#", csharpPreferences);
     });
 
     exports.getId         = getId;
     exports.getGenOptions = getGenOptions;
-    exports.getRevOptions = getRevOptions;
-
 });
