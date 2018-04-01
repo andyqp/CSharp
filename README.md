@@ -10,7 +10,7 @@ C# Code Generation
 2. Select a base model (or package) that will be generated to C#.
 3. Select a folder where generated C# source files will be placed.
 
-Belows are the rules to convert from UML model elements to C# source codes.
+Below are the rules to convert from UML model elements to C# source codes.
 
 ### UMLPackage
 
@@ -34,7 +34,7 @@ Belows are the rules to convert from UML model elements to C# source codes.
 * `name` property to property identifier.
 * `type` property to property type.
 * if `multiplicity` is `[0..1]`, nullable type is used, where applicable.
-* if `multiplicity` is one of `0..*`, `1..*`, `*`, then collection type (`List<>` when `isOrdered` = `true` or `HashSet<>`) is used.
+* if `multiplicity` is one of `0..*`, `1..*`, `*`, then configurable collection type for ordered or unordered collection is used.
 * if `multiplicity` is exact number > 1, array type `[]` is used.
 * `isStatic` property to `static` modifier.
 * `isLeaf` property to `sealed` modifier.
@@ -75,7 +75,7 @@ Belows are the rules to convert from UML model elements to C# source codes.
 * `name` property to property identifier.
 * `type` property to property type.
 * if `multiplicity` is `[0..1]`, nullable type is used, where applicable.
-* if `multiplicity` is one of `0..*`, `1..*`, `*`, then collection type (`List<>` when `isOrdered` = `true` or `HashSet<>`) is used.
+* if `multiplicity` is one of `0..*`, `1..*`, `*`, then configurable collection type for ordered or unordered collection is used.
 * if `multiplicity` is exact number > 1, array type `[]` is used.
 * `defaultValue` property to initial value.
 * Documentation property to C# XML comment as a  `<summary>`.
