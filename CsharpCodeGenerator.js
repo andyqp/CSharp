@@ -742,6 +742,7 @@ define(function (require, exports, module) {
 
         if (elem.name.length > 0) {
             var terms = [];
+            var backingFieldName = "";
             // doc
             this.writeDoc(codeWriter, elem.documentation, options);
             // modifiers
@@ -750,28 +751,42 @@ define(function (require, exports, module) {
                 terms.push(_modifiers.join(" "));
             }
             // type
-            terms.push(this.getType(elem,options));
+            var type = this.getType(elem,options);
+            terms.push(type);
             // name
             terms.push(elem.name);
 
             if (elem.stereotype !== "field") {
                 if (elem.isDerived) {
-                    terms.push(" => " + elem.defaultValue + ";");
+                    terms.push("=> " + elem.defaultValue + ";");
+                }
+                else if (!elem.isReadOnly) {
+                    terms.push("{ get; set; }");
+                } else if (!options.generateBackingField) {
+                    terms.push("{ get; }");
                 }
                 else {
-                    terms.push("{ get;");
-                    if (!elem.isReadOnly) {
-                        terms.push("set;");
-                    }
-                    terms.push("}")
+                    var name = (options.backingFieldPrefix.length === 0 || options.backingFieldPrefix === "_")
+                                    ? elem.name.charAt(0).toLowerCase() + elem.name.slice(1)
+                                    : elem.name;
+                    backingFieldName = options.backingFieldPrefix + name;
+                    terms.push("=> " + backingFieldName + ";"); 
                 }
             }
             // initial value
-            if (elem.defaultValue && elem.defaultValue.length > 0 && !elem.isDerived) {
+            if (elem.defaultValue && elem.defaultValue.length > 0 && !elem.isDerived && backingFieldName === "") {
                 terms.push("= " + elem.defaultValue);
             }
 
             codeWriter.writeLine(terms.join(" ") + (elem.stereotype === "field" ? ";" : ""));
+            
+            if (backingFieldName !== "") {
+                terms = ["private", type, backingFieldName];
+                if (elem.defaultValue && elem.defaultValue.length > 0) {
+                    terms.push("= " + elem.defaultValue);
+                }
+                codeWriter.writeLine(terms.join(" ") + ";");
+            }
         }
     };
 

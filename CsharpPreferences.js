@@ -64,6 +64,18 @@ define(function (require, exports, module) {
             description: "Generic type to use for ordered collections.",
             type: "String",
             default: "IList"
+        },
+        "csharp.gen.generateBackingField": {
+            text: "Use backing field for readOnly",
+            description: "Generate backing field for read-only properties.",
+            type: "Check",
+            default: "false"
+        },
+        "csharp.gen.backingFieldPrefix": {
+            text: "Backing field name prefix",
+            description: "Prefix used for the generated backing field.",
+            type: "String",
+            default: ""
         }
     };
 
@@ -78,7 +90,9 @@ define(function (require, exports, module) {
             indentSpaces  : PreferenceManager.get("csharp.gen.indentSpaces"),
             useCrLf       : PreferenceManager.get("csharp.gen.useCrLf"),
             unorderedCollectionType  : PreferenceManager.get("csharp.gen.unorderedCollectionType"),
-            orderedCollectionType    : PreferenceManager.get("csharp.gen.orderedCollectionType")
+            orderedCollectionType    : PreferenceManager.get("csharp.gen.orderedCollectionType"),
+            generateBackingField  : PreferenceManager.get("csharp.gen.generateBackingField"),
+            backingFieldPrefix    : PreferenceManager.get("csharp.gen.backingFieldPrefix").trim()
         };
     }
 
