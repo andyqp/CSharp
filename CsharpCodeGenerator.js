@@ -383,7 +383,7 @@ define(function (require, exports, module) {
 
         // Class
         terms.push("class");
-        terms.push(elem.name + "Attribute");
+        terms.push(elem.name);
 
         // AnnotationType => Attribute in C#
         terms.push(" : System.Attribute");
