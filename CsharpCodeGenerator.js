@@ -546,7 +546,8 @@ define(function (require, exports, module) {
                 this.writeMemberVariable(codeWriter, asso.end2, options);
                 codeWriter.writeLine();
                 console.log('assoc end1');
-            } else if (asso.end2.reference === elem && asso.end1.navigable === true) {
+            }
+            if (asso.end2.reference === elem && asso.end1.navigable === true) {
                 this.writeMemberVariable(codeWriter, asso.end1, options);
                 codeWriter.writeLine();
                 console.log('assoc end2');
