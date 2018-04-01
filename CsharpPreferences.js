@@ -46,6 +46,18 @@ define(function (require, exports, module) {
             description: "Number of spaces for indentation.",
             type: "Number",
             default: 4
+        },
+        "csharp.gen.unorderedCollectionType": {
+            text: "Unordered collections type",
+            description: "Generic type to use for unordered collections.",
+            type: "String",
+            default: "ISet"
+        },
+        "csharp.gen.orderedCollectionType": {
+            text: "Ordered collections type",
+            description: "Generic type to use for ordered collections.",
+            type: "String",
+            default: "IList"
         }
     };
 
@@ -57,7 +69,9 @@ define(function (require, exports, module) {
         return {
             csharpDoc     : PreferenceManager.get("csharp.gen.csharpDoc"),
             useTab        : PreferenceManager.get("csharp.gen.useTab"),
-            indentSpaces  : PreferenceManager.get("csharp.gen.indentSpaces")
+            indentSpaces  : PreferenceManager.get("csharp.gen.indentSpaces"),
+            unorderedCollectionType  : PreferenceManager.get("csharp.gen.unorderedCollectionType"),
+            orderedCollectionType    : PreferenceManager.get("csharp.gen.orderedCollectionType")
         };
     }
 

@@ -610,7 +610,7 @@ define(function (require, exports, module) {
 
             // type
             if (returnParam) {
-                terms.push(this.getType(returnParam));
+                terms.push(this.getType(returnParam, options));
             } else {
                 terms.push("void");
             }
@@ -621,7 +621,7 @@ define(function (require, exports, module) {
                 var i, len;
                 for (i = 0, len = params.length; i < len; i++) {
                     var p = params[i];
-                    var s = this.getType(p) + " " + p.name;
+                    var s = this.getType(p,options) + " " + p.name;
                     if (p.isReadOnly === true) {
                         s = "sealed " + s;
                     }
@@ -640,7 +640,7 @@ define(function (require, exports, module) {
 
                 // return statement
                 if (returnParam) {
-                    var returnType = this.getType(returnParam);
+                    var returnType = this.getType(returnParam,options);
                     if (returnType === "bool") {
                         codeWriter.writeLine("return False;");
                     } else if (returnType === "byte"
@@ -677,10 +677,11 @@ define(function (require, exports, module) {
     /**
      * Return type expression
      * @param {type.Model} elem
+     * @param {Object} options
      * @return {string}
      */
 
-    CsharpCodeGenerator.prototype.getType = function (elem) {
+    CsharpCodeGenerator.prototype.getType = function (elem, options) {
         var _type = "void";
         var _nullable = false;
         // type name
@@ -706,9 +707,9 @@ define(function (require, exports, module) {
         if (elem.multiplicity) {
             if (_.contains(["0..*", "1..*", "*"], elem.multiplicity.trim())) {
                 if (elem.isOrdered === true) {
-                    _type = "List<" + _type + ">";
+                    _type = options.orderedCollectionType + "<" + _type + ">";
                 } else {
-                    _type = "HashSet<" + _type + ">";
+                    _type = options.unorderedCollectionType + "<" + _type + ">";
                 }
             } else if (elem.multiplicity !== "1" && elem.multiplicity.match(/^\d+$/)) { // number
                 _type += "[]";
@@ -739,7 +740,7 @@ define(function (require, exports, module) {
                 terms.push(_modifiers.join(" "));
             }
             // type
-            terms.push(this.getType(elem));
+            terms.push(this.getType(elem,options));
             // name
             terms.push(elem.name);
 
