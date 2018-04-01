@@ -135,7 +135,7 @@ define(function (require, exports, module) {
                 FileUtils.writeText(file, codeWriter.getData(), true).then(result.resolve, result.reject);
             } else {
                 // Class
-                fullPath = path + "/" + elem.name + ".Designer.cs";
+                fullPath = path + "/" + elem.name + ".designer.cs";
                 console.log('Class generate' + fullPath);
 
                 codeWriter = new CodeGenUtils.CodeWriter(this.getIndentString(options));
@@ -491,7 +491,7 @@ define(function (require, exports, module) {
         }
 
         // Class
-        terms.push("patial class");
+        terms.push("partial class");
         terms.push(elem.name);
 
         // Extends
@@ -688,7 +688,7 @@ define(function (require, exports, module) {
             if (elem.reference instanceof type.UMLModelElement && elem.reference.name.length > 0) {
                 _type = elem.reference.name;
                 if (elem._parent !== elem.reference._parent) {
-                    
+                    // TODO: Namespaces?
                 }
             }
         } else {
@@ -697,7 +697,7 @@ define(function (require, exports, module) {
                 _nullable = elem.type instanceof type.UMLEnumeration;
             } else if (_.isString(elem.type) && elem.type.length > 0) {
                 _type = elem.type;
-                _nullable = elem.type.name !== "string";
+                _nullable = elem.type !== "string";
             }
         }
 
