@@ -28,7 +28,7 @@ define(function (require, exports, module) {
      * CodeWriter
      * @constructor
      */
-    function CodeWriter(indentString) {
+    function CodeWriter(indentString,lineEnding) {
         
         /** @member {Array.<string>} lines */
         this.lines = [];
@@ -38,6 +38,8 @@ define(function (require, exports, module) {
 
         /** @member {Array.<string>} indentations */
         this.indentations = [];
+
+        this.lineEnding = (lineEnding ? lineEnding : "\r\n");
     }
 
     /**
@@ -71,7 +73,7 @@ define(function (require, exports, module) {
      * @return {string}
      */    
     CodeWriter.prototype.getData = function () {
-        return this.lines.join("\n");
+        return this.lines.join(this.lineEnding);
     };
 
     exports.CodeWriter = CodeWriter;

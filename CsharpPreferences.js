@@ -47,6 +47,12 @@ define(function (require, exports, module) {
             type: "Number",
             default: 4
         },
+        "csharp.gen.useCrLf": {
+            text: "Use CR/LF",
+            description: "Use CR/LF for line endings instead of LF.",
+            type: "Check",
+            default: true
+        },
         "csharp.gen.unorderedCollectionType": {
             text: "Unordered collections type",
             description: "Generic type to use for unordered collections.",
@@ -70,6 +76,7 @@ define(function (require, exports, module) {
             csharpDoc     : PreferenceManager.get("csharp.gen.csharpDoc"),
             useTab        : PreferenceManager.get("csharp.gen.useTab"),
             indentSpaces  : PreferenceManager.get("csharp.gen.indentSpaces"),
+            useCrLf       : PreferenceManager.get("csharp.gen.useCrLf"),
             unorderedCollectionType  : PreferenceManager.get("csharp.gen.unorderedCollectionType"),
             orderedCollectionType    : PreferenceManager.get("csharp.gen.orderedCollectionType")
         };

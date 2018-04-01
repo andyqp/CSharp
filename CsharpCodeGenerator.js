@@ -72,6 +72,15 @@ define(function (require, exports, module) {
     };
 
     /**
+     * Return line ending sequence based on options
+     * @param {Object} options
+     * @return {string}
+     */
+    CsharpCodeGenerator.prototype.getLineEnding = function (options) {
+        return options.useCrLf ? "\r\n" : "\n";
+    };
+
+    /**
      * Generate codes from a given element
      * @param {type.Model} elem
      * @param {string} path
@@ -122,7 +131,7 @@ define(function (require, exports, module) {
                 }
 
                 fullPath = path + "/" + elem.name + ".cs";
-                codeWriter = new CodeGenUtils.CodeWriter(this.getIndentString(options));
+                codeWriter = new CodeGenUtils.CodeWriter(this.getIndentString(options), this.getLineEnding(options));
                 codeWriter.writeLine();
                 codeWriter.writeLine("using System;");
                 codeWriter.writeLine("using System.Collections.Generic;");
@@ -138,7 +147,7 @@ define(function (require, exports, module) {
                 fullPath = path + "/" + elem.name + ".designer.cs";
                 console.log('Class generate' + fullPath);
 
-                codeWriter = new CodeGenUtils.CodeWriter(this.getIndentString(options));
+                codeWriter = new CodeGenUtils.CodeWriter(this.getIndentString(options), this.getLineEnding(options));
                 codeWriter.writeLine("using System;");
                 codeWriter.writeLine("using System.Collections.Generic;");
                 codeWriter.writeLine("using System.Linq;");
@@ -154,7 +163,7 @@ define(function (require, exports, module) {
             fullPath = path + "/" + elem.name + ".cs";
             console.log('Interface generate' + fullPath);
 
-            codeWriter = new CodeGenUtils.CodeWriter(this.getIndentString(options));
+            codeWriter = new CodeGenUtils.CodeWriter(this.getIndentString(options), this.getLineEnding(options));
             codeWriter.writeLine();
             codeWriter.writeLine("using System;");
             codeWriter.writeLine("using System.Collections.Generic;");
@@ -169,7 +178,7 @@ define(function (require, exports, module) {
         } else if (elem instanceof type.UMLEnumeration) {
         // Enum
             fullPath = path + "/" + elem.name + ".cs";
-            codeWriter = new CodeGenUtils.CodeWriter(this.getIndentString(options));
+            codeWriter = new CodeGenUtils.CodeWriter(this.getIndentString(options), this.getLineEnding(options));
             codeWriter.writeLine();
 //            this.writeEnum(codeWriter, elem, options);
             this.writeNamespace("writeEnum", codeWriter, elem, options, isAnnotationType);
