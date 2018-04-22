@@ -652,7 +652,7 @@ define(function (require, exports, module) {
                 if (returnParam) {
                     var returnType = this.getType(returnParam,options);
                     if (returnType === "bool") {
-                        codeWriter.writeLine("return False;");
+                        codeWriter.writeLine("return false;");
                     } else if (returnType === "byte"
                                || returnType === "int"
                                || returnType === "sbyte"
