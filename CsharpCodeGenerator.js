@@ -132,7 +132,6 @@ define(function (require, exports, module) {
 
                 fullPath = path + "/" + elem.name + ".cs";
                 codeWriter = new CodeGenUtils.CodeWriter(this.getIndentString(options), this.getLineEnding(options));
-                codeWriter.writeLine();
                 codeWriter.writeLine("using System;");
                 codeWriter.writeLine("using System.Collections.Generic;");
                 codeWriter.writeLine("using System.Linq;");
@@ -164,7 +163,6 @@ define(function (require, exports, module) {
             console.log('Interface generate' + fullPath);
 
             codeWriter = new CodeGenUtils.CodeWriter(this.getIndentString(options), this.getLineEnding(options));
-            codeWriter.writeLine();
             codeWriter.writeLine("using System;");
             codeWriter.writeLine("using System.Collections.Generic;");
             codeWriter.writeLine("using System.Linq;");
@@ -321,7 +319,7 @@ define(function (require, exports, module) {
         // Member Variables
         // (from attributes)
         for (i = 0, len = elem.attributes.length; i < len; i++) {
-            this.writeMemberVariable(codeWriter, elem.attributes[i], options);
+            this.writeMemberVariable(codeWriter, elem.attributes[i], options, true);
             codeWriter.writeLine();
         }
         // (from associations)
@@ -755,7 +753,7 @@ define(function (require, exports, module) {
      * @param {Object} options
      */
 
-    CsharpCodeGenerator.prototype.writeMemberVariable = function (codeWriter, elem, options) {
+    CsharpCodeGenerator.prototype.writeMemberVariable = function (codeWriter, elem, options, omitModifiers) {
 
         if (elem.name.length > 0) {
             var terms = [];
@@ -763,9 +761,11 @@ define(function (require, exports, module) {
             // doc
             this.writeDoc(codeWriter, elem.documentation, options);
             // modifiers
-            var _modifiers = this.getModifiers(elem);
-            if (_modifiers.length > 0) {
-                terms.push(_modifiers.join(" "));
+            if (!omitModifiers) {
+                var _modifiers = this.getModifiers(elem);
+                if (_modifiers.length > 0) {
+                    terms.push(_modifiers.join(" "));
+                }
             }
             // type
             var type = this.getType(elem,options);
@@ -792,7 +792,7 @@ define(function (require, exports, module) {
             }
             // initial value
             if (elem.defaultValue && elem.defaultValue.length > 0 && !elem.isDerived && backingFieldName === "") {
-                terms.push("= " + elem.defaultValue);
+                terms.push("= " + elem.defaultValue + (elem.stereotype === "field" ? "" : ";"));
             }
 
             codeWriter.writeLine(terms.join(" ") + (elem.stereotype === "field" ? ";" : ""));
