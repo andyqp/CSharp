@@ -179,6 +179,8 @@ define(function (require, exports, module) {
         // Enum
             fullPath = path + "/" + elem.name + ".cs";
             codeWriter = new CodeGenUtils.CodeWriter(this.getIndentString(options), this.getLineEnding(options));
+            codeWriter.writeLine("using System;");
+            codeWriter.writeLine("using System.ComponentModel;");
             codeWriter.writeLine();
 //            this.writeEnum(codeWriter, elem, options);
             this.writeNamespace("writeEnum", codeWriter, elem, options, isAnnotationType);
@@ -239,10 +241,14 @@ define(function (require, exports, module) {
     CsharpCodeGenerator.prototype.writeEnum = function (codeWriter, elem, options) {
 
 
-        var i, len, terms = [];
+        var i, t, len, tlen, tag, terms = [];
         // Doc
         this.writeDoc(codeWriter, elem.documentation, options);
-
+        // Tags
+        for (t = 0, tlen = elem.tags.length; t < tlen; t++) {
+            tag = elem.tags[t];
+            codeWriter.writeLine("[" + tag.name + (tag.kind === "string" ? "(\"" + tag.value + "\")" : "") + "]");
+        }
         // Modifiers
         var visibility = this.getVisibility(elem);
         if (visibility) {
@@ -257,7 +263,18 @@ define(function (require, exports, module) {
 
         // Literals
         for (i = 0, len = elem.literals.length; i < len; i++) {
-            codeWriter.writeLine(elem.literals[i].name + (i < elem.literals.length - 1 ? "," : ""));
+            var defaultValue = null;
+            // Tags
+            for (t = 0, tlen = elem.literals[i].tags.length; t < tlen; t++) {
+                tag = elem.literals[i].tags[t];
+                if (tag.name === "Value") {
+                    defaultValue = tag.number;
+                }
+                else {
+                    codeWriter.writeLine("[" + tag.name + (tag.kind === "string" ? "(\"" + tag.value + "\")" : "") + "]");
+                }
+            }
+            codeWriter.writeLine(elem.literals[i].name + (defaultValue != null ? " = " + defaultValue : "") + (i < elem.literals.length - 1 ? "," : ""));
         }
 
         codeWriter.outdent();
