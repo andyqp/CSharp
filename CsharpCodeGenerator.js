@@ -542,6 +542,12 @@ define(function (require, exports, module) {
         // this.writeConstructor(codeWriter, elem, options);
         // codeWriter.writeLine();
 
+        // id property if stereotype is entity
+        if (elem.stereotype && elem.stereotype.name.toLowerCase() === "entity") {
+            codeWriter.writeLine("public virtual System.Guid Id { get; protected set; }")
+            codeWriter.writeLine();
+        }
+
         // Member Variables
         // (from attributes)
         for (i = 0, len = elem.attributes.length; i < len; i++) {
@@ -628,7 +634,7 @@ define(function (require, exports, module) {
             this.writeDoc(codeWriter, doc, options);
 
             // modifiers
-            var _modifiers = this.getModifiers(elem);
+            var _modifiers = this.getModifiers(elem, true);
             if (_modifiers.length > 0) {
                 terms.push(_modifiers.join(" "));
             }
@@ -755,6 +761,10 @@ define(function (require, exports, module) {
 
     CsharpCodeGenerator.prototype.writeMemberVariable = function (codeWriter, elem, options, omitModifiers) {
 
+        function endsWith(str, suffix) {
+            return str.indexOf(suffix, str.length - suffix.length) !== -1;
+        };
+        
         if (elem.name.length > 0) {
             var terms = [];
             var backingFieldName = "";
@@ -762,7 +772,7 @@ define(function (require, exports, module) {
             this.writeDoc(codeWriter, elem.documentation, options);
             // modifiers
             if (!omitModifiers) {
-                var _modifiers = this.getModifiers(elem);
+                var _modifiers = this.getModifiers(elem, elem.stereotype !== "field");
                 if (_modifiers.length > 0) {
                     terms.push(_modifiers.join(" "));
                 }
@@ -777,7 +787,7 @@ define(function (require, exports, module) {
                 if (elem.isDerived) {
                     terms.push("=> " + elem.defaultValue + ";");
                 }
-                else if (!elem.isReadOnly) {
+                else if (!elem.isReadOnly && !endsWith(elem.multiplicity.trim(),"*")) {
                     terms.push("{ get; set; }");
                 } else if (!options.generateBackingField) {
                     terms.push("{ get; }");
@@ -872,21 +882,19 @@ define(function (require, exports, module) {
      * @param {type.Model} elem
      * @return {Array.<string>}
      */
-    CsharpCodeGenerator.prototype.getModifiers = function (elem) {
+    CsharpCodeGenerator.prototype.getModifiers = function (elem, isMethod) {
         var modifiers = [];
         var visibility = this.getVisibility(elem);
-        if (visibility) {
+        if (visibility)
             modifiers.push(visibility);
-        }
-        if (elem.isStatic === true) {
+        if (elem.isStatic === true)
             modifiers.push("static");
-        }
-        if (elem.isAbstract === true) {
+        else if (elem.isAbstract === true)
             modifiers.push("abstract");
-        }
-        if (elem.isFinalSpecialization === true || elem.isLeaf === true) {
+        else if (elem.isFinalSpecialization === true || elem.isLeaf === true)
             modifiers.push("sealed");
-        }
+        else if (isMethod === true && elem.visibility !== UML.VK_PRIVATE)
+            modifiers.push("virtual");
         //if (elem.concurrency === UML.CCK_CONCURRENT) {
             //http://msdn.microsoft.com/ko-kr/library/c5kehkcz.aspx
             //modifiers.push("synchronized");
