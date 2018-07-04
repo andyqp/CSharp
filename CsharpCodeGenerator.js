@@ -500,9 +500,9 @@ define(function (require, exports, module) {
 
         // Doc
         var doc = elem.documentation.trim();
-        if (ProjectManager.getProject().author && ProjectManager.getProject().author.length > 0) {
-            doc += "\n@author " + ProjectManager.getProject().author;
-        }
+        // if (ProjectManager.getProject().author && ProjectManager.getProject().author.length > 0) {
+        //     doc += "\n@author " + ProjectManager.getProject().author;
+        // }
         this.writeDoc(codeWriter, doc, options);
 
          // Modifiers
