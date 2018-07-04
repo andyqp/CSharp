@@ -507,7 +507,7 @@ define(function (require, exports, module) {
 
          // Modifiers
         var _modifiers = this.getModifiers(elem);
-        if (_.some(elem.operations, function (op) { return op.isAbstract === true; })) {
+        if (_modifiers.indexOf("abstract") < 0 && _.some(elem.operations, function (op) { return op.isAbstract === true; })) {
             _modifiers.push("abstract");
         }
         if (_modifiers.length > 0) {
