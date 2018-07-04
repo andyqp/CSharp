@@ -625,13 +625,13 @@ define(function (require, exports, module) {
 
             // doc
             var doc = elem.documentation.trim();
+            this.writeDoc(codeWriter, doc, options);
             _.each(params, function (param) {
-                doc += "\n@param " + param.name + " " + param.documentation;
+                codeWriter.writeLine("/// <param name=\"" + param.name + "\">" + param.documentation + "</param>");
             });
             if (returnParam) {
-                doc += "\n@return " + returnParam.documentation;
+                codeWriter.writeLine("/// <returns>" + returnParam.documentation + "</returns>");
             }
-            this.writeDoc(codeWriter, doc, options);
 
             // modifiers
             var _modifiers = this.getModifiers(elem, true);
