@@ -262,15 +262,21 @@ define(function (require, exports, module) {
         // Literals
         for (i = 0, len = elem.literals.length; i < len; i++) {
             var defaultValue = null;
+            this.writeDoc(codeWriter, elem.literals[i].documentation, options);
             // Tags
+            var hadDescription = false;
             for (t = 0, tlen = elem.literals[i].tags.length; t < tlen; t++) {
                 tag = elem.literals[i].tags[t];
+                hadDescription = hadDescription || (tag.name === "Description");
                 if (tag.name === "Value") {
                     defaultValue = tag.number;
                 }
                 else {
                     codeWriter.writeLine("[" + tag.name + (tag.kind === "string" ? "(\"" + tag.value + "\")" : "") + "]");
                 }
+            }
+            if (!hadDescription && elem.literals[i].documentation) {
+                codeWriter.writeLine("[Description(\"" + elem.literals[i].documentation + "\")]");
             }
             codeWriter.writeLine(elem.literals[i].name + (defaultValue != null ? " = " + defaultValue : "") + (i < elem.literals.length - 1 ? "," : ""));
         }
@@ -639,10 +645,14 @@ define(function (require, exports, module) {
                 terms.push(_modifiers.join(" "));
             }
 
+            if (!elem.specification && !_.contains(_modifiers, "abstract") && !_.contains(_modifiers, "virtual")) {
+                terms.push("partial");
+            }
+
             // type
             if (returnParam) {
                 terms.push(this.getType(returnParam, options));
-            } else {
+            } else if (elem.stereotype != "constructor") {
                 terms.push("void");
             }
 
@@ -653,8 +663,8 @@ define(function (require, exports, module) {
                 for (i = 0, len = params.length; i < len; i++) {
                     var p = params[i];
                     var s = this.getType(p,options) + " " + p.name;
-                    if (p.isReadOnly === true) {
-                        s = "sealed " + s;
+                    if (p.defaultValue) {
+                        s += " = " + p.defaultValue;
                     }
                     paramTerms.push(s);
                 }
@@ -662,43 +672,15 @@ define(function (require, exports, module) {
             terms.push(elem.name + "(" + paramTerms.join(", ") + ")");
 
             // body
-            if (skipBody === true || _.contains(_modifiers, "abstract")) {
+            if (skipBody === true || !elem.specification ||  _.contains(terms, "partial")) {
                 codeWriter.writeLine(terms.join(" ") + ";");
             } else {
                 codeWriter.writeLine(terms.join(" ") + " {");
                 codeWriter.indent();
-                codeWriter.writeLine("// TODO implement here");
-
-                // return statement
-                if (returnParam) {
-                    var returnType = this.getType(returnParam,options);
-                    if (returnType === "bool") {
-                        codeWriter.writeLine("return false;");
-                    } else if (returnType === "byte"
-                               || returnType === "int"
-                               || returnType === "sbyte"
-                               || returnType === "short"
-                               || returnType === "uint"
-                               || returnType === "ulong"
-                               || returnType === "ushort") {
-                        codeWriter.writeLine("return 0;");
-                    } else if (returnType === "float") {
-                        codeWriter.writeLine("return 0.0F;");
-                    } else if (returnType === "double") {
-                        codeWriter.writeLine("return 0.0D;");
-                    } else if (returnType === "long") {
-                        codeWriter.writeLine("return 0.0L;");
-                    } else if (returnType === "decimal") {
-                        codeWriter.writeLine("return 0.0M;");
-                    } else if (returnType === "char") {
-                        codeWriter.writeLine("return '\\0';");
-                    } else if (returnType === "string") {
-                        codeWriter.writeLine('return "";');
-                    } else {
-                        codeWriter.writeLine("return null;");
-                    }
+                var lines = elem.specification.split("\n");
+                for (i = 0, len = lines.length; i < len; i++) {
+                    codeWriter.writeLine(lines[i]);
                 }
-
                 codeWriter.outdent();
                 codeWriter.writeLine("}");
             }
@@ -776,6 +758,9 @@ define(function (require, exports, module) {
                 if (_modifiers.length > 0) {
                     terms.push(_modifiers.join(" "));
                 }
+            }
+            if (elem.stereotype === "field" && elem.isReadOnly) {
+                terms.push("readonly");
             }
             // type
             var type = this.getType(elem,options);
@@ -885,15 +870,15 @@ define(function (require, exports, module) {
     CsharpCodeGenerator.prototype.getModifiers = function (elem, isMethod) {
         var modifiers = [];
         var visibility = this.getVisibility(elem);
-        if (visibility)
+        if (visibility && !(elem.stereotype === "constructor" && elem.isStatic))
             modifiers.push(visibility);
         if (elem.isStatic === true)
             modifiers.push("static");
         else if (elem.isAbstract === true)
             modifiers.push("abstract");
-        else if (elem.isFinalSpecialization === true || elem.isLeaf === true)
+        else if (isMethod === false && (elem.isFinalSpecialization === true || elem.isLeaf === true))
             modifiers.push("sealed");
-        else if (isMethod === true && elem.visibility !== UML.VK_PRIVATE)
+        else if (isMethod === true && !(elem.isFinalSpecialization === true || elem.isLeaf === true) && elem.visibility !== UML.VK_PRIVATE)
             modifiers.push("virtual");
         //if (elem.concurrency === UML.CCK_CONCURRENT) {
             //http://msdn.microsoft.com/ko-kr/library/c5kehkcz.aspx
