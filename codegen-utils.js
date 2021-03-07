@@ -21,15 +21,16 @@
  *
  */
 
-define(function (require, exports, module) {
-    "use strict";
+/**
+ * CodeWriter
+ */
+class CodeWriter {
 
     /**
-     * CodeWriter
      * @constructor
      */
-    function CodeWriter(indentString,lineEnding) {
-        
+    constructor(indentString, lineEnding) {
+
         /** @member {Array.<string>} lines */
         this.lines = [];
 
@@ -44,38 +45,43 @@ define(function (require, exports, module) {
 
     /**
      * Indent
-     */    
-    CodeWriter.prototype.indent = function () {
+     */
+    indent() {
         this.indentations.push(this.indentString);
     };
 
     /**
      * Outdent
-     */    
-    CodeWriter.prototype.outdent = function () {
-        this.indentations.splice(this.indentations.length-1, 1);
+     */
+    outdent() {
+        this.indentations.splice(this.indentations.length - 1, 1);
     };
 
     /**
      * Write a line
      * @param {string} line
-     */    
-    CodeWriter.prototype.writeLine = function (line) {
+     */
+    writeLine(line) {
         if (line) {
-            this.lines.push(this.indentations.join("") + line);    
+            this.lines.push(this.indentations.join("") + line);
         } else {
             this.lines.push("");
-        }        
+        }
     };
 
     /**
      * Return as all string data
      * @return {string}
-     */    
-    CodeWriter.prototype.getData = function () {
+     */
+    getData() {
         return this.lines.join(this.lineEnding);
     };
+}
 
-    exports.CodeWriter = CodeWriter;
+exports.CodeWriter = CodeWriter;
 
-});
+function isEmpty(str) {
+    return !str || str.match(/^ *$/) !== null;
+}
+
+exports.isEmpty = isEmpty;

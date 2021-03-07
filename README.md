@@ -1,4 +1,4 @@
-C# Extension for StarUML 2
+C# Extension for StarUML 3+
 ============================
 
 This extension for StarUML(http://staruml.io) support to generate C# code from UML model. Install this extension from Extension Manager of StarUML. It is based on C# 6.0 specification.

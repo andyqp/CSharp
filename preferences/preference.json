@@ -1,0 +1,58 @@
+{
+    "id": "csharp",
+    "name": "C#",
+    "schema": {
+        "csharp.gen": {
+            "text": "C# Code Generation",
+            "type": "section"
+        },
+        "csharp.gen.csharpDoc": {
+            "text": "C# XML comments",
+            "description": "Generate C# XML comments.",
+            "type": "check",
+            "default": true
+        },
+        "csharp.gen.useTab": {
+            "text": "Use Tab",
+            "description": "Use Tab for indentation instead of spaces.",
+            "type": "check",
+            "default": false
+        },
+        "csharp.gen.indentSpaces": {
+            "text": "Indent Spaces",
+            "description": "Number of spaces for indentation.",
+            "type": "number",
+            "default": 4
+        },
+        "csharp.gen.useCrLf": {
+            "text": "Use CR/LF",
+            "description": "Use CR/LF for line endings instead of LF.",
+            "type": "check",
+            "default": true
+        },
+        "csharp.gen.unorderedCollectionType": {
+            "text": "Unordered collections type",
+            "description": "Generic type to use for unordered collections.",
+            "type": "string",
+            "default": "ISet"
+        },
+        "csharp.gen.orderedCollectionType": {
+            "text": "Ordered collections type",
+            "description": "Generic type to use for ordered collections.",
+            "type": "string",
+            "default": "IList"
+        },
+        "csharp.gen.generateBackingField": {
+            "text": "Use backing field for readOnly",
+            "description": "Generate backing field for read-only properties.",
+            "type": "check",
+            "default": false
+        },
+        "csharp.gen.backingFieldPrefix": {
+            "text": "Backing field name prefix",
+            "description": "Prefix used for the generated backing field.",
+            "type": "string",
+            "default": ""
+        }
+    }
+}
